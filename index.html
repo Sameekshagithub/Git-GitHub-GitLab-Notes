@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Git · GitHub · GitLab Notes — Sameeksha</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy:       #0a1628;
+    --navy-mid:   #112240;
+    --navy-light: #1b3a6b;
+    --blue:       #1e5fc2;
+    --blue-bright:#2979ff;
+    --accent:     #0ff;
+    --white:      #ffffff;
+    --off-white:  #f4f7fc;
+    --text:       #1a2a4a;
+    --muted:      #5a7394;
+    --border:     #d0dff5;
+    --code-bg:    #e8f0fb;
+    --tag-git:    #1e5fc2;
+    --tag-gh:     #24292e;
+    --tag-gl:     #fc6d26;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--navy);
+    color: var(--white);
+    padding: 60px 40px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(41,121,255,.18) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 80% at 80% 20%, rgba(0,255,255,.07) 0%, transparent 60%);
+  }
+  .hero-inner { position: relative; max-width: 900px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 100px;
+    padding: 5px 16px;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #a8c5f8;
+    margin-bottom: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #fff 30%, #7eb3ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    font-size: 1rem;
+    color: #8aaad8;
+    max-width: 540px;
+    margin-bottom: 28px;
+  }
+  .hero-author {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 1rem; color: var(--navy);
+  }
+  .author-text { font-size: .9rem; color: #a8c5f8; }
+  .author-text strong { color: #fff; font-size: 1rem; display: block; }
+
+  /* ── NAV ── */
+  .toc-bar {
+    background: var(--navy-mid);
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    position: sticky; top: 0; z-index: 100;
+    overflow-x: auto;
+  }
+  .toc-inner {
+    display: flex; gap: 4px;
+    max-width: 900px; margin: 0 auto;
+    padding: 0 24px;
+  }
+  .toc-inner a {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #8aaad8;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color .2s, border-color .2s;
+  }
+  .toc-inner a:hover { color: #fff; border-color: var(--blue-bright); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-git { background: var(--blue-bright); }
+  .dot-gh  { background: #e0e0e0; }
+  .dot-gl  { background: var(--tag-gl); }
+
+  /* ── MAIN ── */
+  main { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 64px; }
+  .section-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0;
+  }
+  .icon-git { background: linear-gradient(135deg, #1e5fc2, #2979ff); }
+  .icon-gh  { background: linear-gradient(135deg, #1a1a2e, #24292e); }
+  .icon-gl  { background: linear-gradient(135deg, #fc6d26, #e24329); }
+
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .section-header p { font-size: .85rem; color: var(--muted); margin-top: 3px; }
+
+  /* ── SUBSECTION ── */
+  .sub { margin-bottom: 36px; }
+  .sub h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sub h3::before {
+    content: '';
+    display: inline-block;
+    width: 3px; height: 16px;
+    border-radius: 2px;
+    background: var(--blue-bright);
+    flex-shrink: 0;
+  }
+  .sub h4 {
+    font-size: .92rem;
+    font-weight: 600;
+    color: var(--navy-light);
+    margin: 18px 0 8px;
+  }
+
+  /* ── CARDS GRID ── */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .card {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: box-shadow .2s, transform .2s;
+  }
+  .card:hover { box-shadow: 0 6px 24px rgba(30,95,194,.12); transform: translateY(-2px); }
+  .card-title {
+    font-weight: 700;
+    font-size: .9rem;
+    color: var(--navy);
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .badge {
+    font-size: .7rem;
+    padding: 2px 8px; border-radius: 100px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-dark { background: #e5e7eb; color: #111827; }
+  .badge-orange { background: #ffedd5; color: #c2410c; }
+  .card p { font-size: .84rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── TABLE ── */
+  .tbl-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  thead { background: var(--navy); color: var(--white); }
+  thead th { padding: 12px 16px; text-align: left; font-weight: 600; letter-spacing: .05em; font-size: .78rem; text-transform: uppercase; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #edf2fb; }
+  tbody td { padding: 11px 16px; vertical-align: top; }
+  tbody td:first-child { font-family: 'IBM Plex Mono', monospace; font-size: .82rem; color: var(--blue); font-weight: 600; white-space: nowrap; }
+
+  /* ── CODE ── */
+  code, .code-block {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .82rem;
+  }
+  .code-block {
+    background: var(--navy-mid);
+    color: #a8d8ff;
+    border-radius: 10px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin: 12px 0;
+    line-height: 1.75;
+    border: 1px solid rgba(255,255,255,.06);
+  }
+  .code-block .comment { color: #4a6a8a; }
+  .code-block .cmd { color: #79c0ff; }
+  .code-block .flag { color: #ffa657; }
+  .code-block .string { color: #a5d6ff; }
+  .code-block .num { color: #79c0ff; }
+
+  /* ── INFO BOXES ── */
+  .info-box {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    font-size: .88rem;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .info-box.tip   { background: #eff6ff; border-left: 3px solid var(--blue-bright); }
+  .info-box.warn  { background: #fff7ed; border-left: 3px solid #f97316; }
+  .info-box.note  { background: #f0fdf4; border-left: 3px solid #22c55e; }
+  .info-box .ib-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .info-box p { color: var(--text); line-height: 1.6; }
+  .info-box strong { color: var(--navy); }
+
+  /* ── FLOW ── */
+  .flow {
+    display: flex; align-items: center; gap: 0;
+    flex-wrap: wrap;
+    margin: 16px 0;
+  }
+  .flow-step {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: .82rem;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+    white-space: nowrap;
+  }
+  .flow-arrow {
+    padding: 0 8px;
+    color: var(--blue-bright);
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  /* ── LIST ── */
+  .styled-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .styled-list li {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: .88rem; line-height: 1.6;
+  }
+  .styled-list li::before {
+    content: '▸';
+    color: var(--blue-bright);
+    font-size: .8rem;
+    margin-top: 3px; flex-shrink: 0;
+  }
+
+  /* ── COMPARISON ── */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media (max-width: 640px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-col { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+  .compare-head { padding: 14px 16px; font-weight: 700; font-size: .85rem; color: #fff; letter-spacing: .04em; }
+  .ch-git { background: var(--blue); }
+  .ch-gh  { background: #24292e; }
+  .ch-gl  { background: #e24329; }
+  .compare-body { padding: 14px 16px; background: var(--off-white); }
+  .compare-body li { font-size: .83rem; color: var(--text); list-style: none; padding: 4px 0; border-bottom: 1px solid var(--border); }
+  .compare-body li:last-child { border: none; }
+  .compare-body li::before { content: '✓  '; color: var(--blue-bright); font-weight: 700; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    color: #5a7394;
+    text-align: center;
+    padding: 32px 24px;
+    font-size: .82rem;
+  }
+  footer strong { color: #a8c5f8; }
+
+  /* ── PRINT ── */
+  @media print {
+    .toc-bar { position: static; }
+    body { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">📚 Complete Study Notes</div>
+    <h1>Git · GitHub · GitLab</h1>
+    <p class="hero-sub">A comprehensive reference covering version control concepts, commands, workflows, and platform features — from beginner to advanced.</p>
+    <div class="hero-author">
+      <div class="avatar">S</div>
+      <div class="author-text">
+        <strong>Sameeksha</strong>
+        Version Control Mastery Notes
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ NAV ═══ -->
+<nav class="toc-bar">
+  <div class="toc-inner">
+    <a href="#git"><span class="dot dot-git"></span>Git</a>
+    <a href="#github"><span class="dot dot-gh"></span>GitHub</a>
+    <a href="#gitlab"><span class="dot dot-gl"></span>GitLab</a>
+    <a href="#workflows">Workflows</a>
+    <a href="#compare">Comparison</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════
+     SECTION 1 — GIT
+══════════════════════════════════════════ -->
+<section class="section" id="git">
+  <div class="section-header">
+    <div class="section-icon icon-git">🌿</div>
+    <div>
+      <h2>Git</h2>
+      <p>Distributed Version Control System — created by Linus Torvalds, 2005</p>
+    </div>
+  </div>
+
+  <!-- What is Git -->
+  <div class="sub">
+    <h3>What is Git?</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Distributed VCS <span class="badge badge-blue">Core</span></div>
+        <p>Every developer has a full copy of the repository including the entire history. No single point of failure.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Snapshots, Not Diffs</div>
+        <p>Git stores data as snapshots of the project over time, not as a list of file-based changes.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Integrity</div>
+        <p>Everything is checksummed with SHA-1 before storing. You can't change content without Git knowing.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">The Three States</div>
+        <p><strong>Modified</strong> → changed but not committed. <strong>Staged</strong> → marked for next commit. <strong>Committed</strong> → safely stored in local DB.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Setup -->
+  <div class="sub">
+    <h3>Initial Setup</h3>
+    <div class="code-block">
+<span class="comment"># Set global identity</span>
+<span class="cmd">git config</span> <span class="flag">--global</span> user.name  <span class="string">"Sameeksha"</span>
+<span class="cmd">git config</span> <span class="flag">--global</span> user.email <span class="string">"sameeksha@example.com"</span>
+
+<span class="comment"># Set default branch name</span>
+<span class="cmd">git config</span> <span class="flag">--global</span> init.defaultBranch main
+
+<span class="comment"># Set default editor</span>
+<span class="cmd">git config</span> <span class="flag">--global</span> core.editor <span class="string">"code --wait"</span>
+
+<span class="comment"># View all settings</span>
+<span class="cmd">git config</span> <span class="flag">--list</span>
+    </div>
+  </div>
+
+  <!-- Core Commands -->
+  <div class="sub">
+    <h3>Core Commands</h3>
+    <h4>Repository Initialisation</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>git init</td><td>Initialise a new local repository in the current directory</td></tr>
+          <tr><td>git clone &lt;url&gt;</td><td>Clone a remote repository to local machine</td></tr>
+          <tr><td>git clone &lt;url&gt; &lt;dir&gt;</td><td>Clone into a specific folder name</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Staging & Committing</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>git status</td><td>Show the working tree status (modified, staged, untracked files)</td></tr>
+          <tr><td>git add &lt;file&gt;</td><td>Stage a specific file</td></tr>
+          <tr><td>git add .</td><td>Stage all changes in current directory</td></tr>
+          <tr><td>git add -p</td><td>Interactively choose hunks to stage</td></tr>
+          <tr><td>git commit -m "msg"</td><td>Commit staged changes with a message</td></tr>
+          <tr><td>git commit -am "msg"</td><td>Stage tracked files and commit in one step</td></tr>
+          <tr><td>git commit --amend</td><td>Modify the most recent commit (message or files)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Viewing History</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>git log</td><td>Show full commit history</td></tr>
+          <tr><td>git log --oneline</td><td>Condensed one-line-per-commit view</td></tr>
+          <tr><td>git log --graph --all</td><td>ASCII branch graph of all branches</td></tr>
+          <tr><td>git diff</td><td>Show unstaged changes</td></tr>
+          <tr><td>git diff --staged</td><td>Show staged changes ready to commit</td></tr>
+          <tr><td>git show &lt;hash&gt;</td><td>Show details of a specific commit</td></tr>
+          <tr><td>git blame &lt;file&gt;</td><td>Show who changed each line of a file</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Undoing Changes</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>git restore &lt;file&gt;</td><td>Discard working directory changes</td></tr>
+          <tr><td>git restore --staged &lt;file&gt;</td><td>Unstage a file (keep changes)</td></tr>
+          <tr><td>git reset HEAD~1</td><td>Undo last commit, keep changes staged</td></tr>
+          <tr><td>git reset --hard HEAD~1</td><td>Undo last commit and discard changes (destructive)</td></tr>
+          <tr><td>git revert &lt;hash&gt;</td><td>Create a new commit that undoes a previous one (safe)</td></tr>
+          <tr><td>git clean -fd</td><td>Remove untracked files and directories</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Branching -->
+  <div class="sub">
+    <h3>Branching & Merging</h3>
+    <div class="info-box tip">
+      <span class="ib-icon">💡</span>
+      <p><strong>Branches are cheap in Git</strong> — they're just 41-byte pointers. Create them often and keep your work isolated.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>git branch</td><td>List local branches</td></tr>
+          <tr><td>git branch -a</td><td>List all branches including remotes</td></tr>
+          <tr><td>git branch &lt;name&gt;</td><td>Create a new branch</td></tr>
+          <tr><td>git switch &lt;name&gt;</td><td>Switch to an existing branch</td></tr>
+          <tr><td>git switch -c &lt;name&gt;</td><td>Create and switch to new branch</td></tr>
+          <tr><td>git merge &lt;branch&gt;</td><td>Merge specified branch into current branch</td></tr>
+          <tr><td>git merge --no-ff &lt;branch&gt;</td><td>Merge preserving branch history (no fast-forward)</td></tr>
+          <tr><td>git branch -d &lt;name&gt;</td><td>Delete a merged branch</td></tr>
+          <tr><td>git branch -D &lt;name&gt;</td><td>Force delete a branch (even if unmerged)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Merge Strategies</h4>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Fast-Forward</div>
+        <p>Moves the branch pointer forward. No merge commit created. History is linear. Used when target is directly ahead.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">3-Way Merge</div>
+        <p>Creates a new merge commit when branches have diverged. Preserves context of both branches.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Squash Merge</div>
+        <p>Combines all commits from feature branch into a single commit. Cleaner main history but loses individual commit detail.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rebasing -->
+  <div class="sub">
+    <h3>Rebasing</h3>
+    <div class="info-box warn">
+      <span class="ib-icon">⚠️</span>
+      <p><strong>Golden rule:</strong> Never rebase commits that have been pushed to a shared remote branch — it rewrites history and causes problems for others.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>git rebase &lt;base&gt;</td><td>Reapply commits on top of another branch</td></tr>
+          <tr><td>git rebase -i HEAD~3</td><td>Interactive rebase for last 3 commits (squash, reword, drop…)</td></tr>
+          <tr><td>git rebase --continue</td><td>Continue rebase after resolving conflicts</td></tr>
+          <tr><td>git rebase --abort</td><td>Cancel the rebase and return to original state</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Remote -->
+  <div class="sub">
+    <h3>Remote Repositories</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>git remote -v</td><td>List remotes with URLs</td></tr>
+          <tr><td>git remote add origin &lt;url&gt;</td><td>Add a remote named origin</td></tr>
+          <tr><td>git remote rename &lt;old&gt; &lt;new&gt;</td><td>Rename a remote</td></tr>
+          <tr><td>git remote remove &lt;name&gt;</td><td>Remove a remote</td></tr>
+          <tr><td>git fetch &lt;remote&gt;</td><td>Download changes without merging</td></tr>
+          <tr><td>git pull</td><td>Fetch and merge remote changes</td></tr>
+          <tr><td>git pull --rebase</td><td>Fetch and rebase instead of merge</td></tr>
+          <tr><td>git push origin &lt;branch&gt;</td><td>Push branch to remote</td></tr>
+          <tr><td>git push -u origin &lt;branch&gt;</td><td>Push and set upstream tracking</td></tr>
+          <tr><td>git push --force-with-lease</td><td>Safer force push (checks for remote changes first)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Stash & Tags -->
+  <div class="sub">
+    <h3>Stashing & Tags</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>git stash</td><td>Temporarily save uncommitted changes</td></tr>
+          <tr><td>git stash push -m "label"</td><td>Stash with a descriptive label</td></tr>
+          <tr><td>git stash list</td><td>List all stashes</td></tr>
+          <tr><td>git stash pop</td><td>Apply latest stash and remove it</td></tr>
+          <tr><td>git stash apply stash@{2}</td><td>Apply a specific stash without removing it</td></tr>
+          <tr><td>git stash drop stash@{0}</td><td>Delete a specific stash</td></tr>
+          <tr><td>git tag v1.0.0</td><td>Create a lightweight tag at current commit</td></tr>
+          <tr><td>git tag -a v1.0.0 -m "msg"</td><td>Create an annotated tag with message</td></tr>
+          <tr><td>git push origin --tags</td><td>Push all tags to remote</td></tr>
+          <tr><td>git tag -d v1.0.0</td><td>Delete a tag locally</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Advanced -->
+  <div class="sub">
+    <h3>Advanced Git</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>git cherry-pick &lt;hash&gt;</td><td>Apply a specific commit from another branch</td></tr>
+          <tr><td>git bisect start / good / bad</td><td>Binary search through history to find a bug</td></tr>
+          <tr><td>git reflog</td><td>View history of HEAD movements (recovery tool)</td></tr>
+          <tr><td>git submodule add &lt;url&gt;</td><td>Add a repository as a sub-module</td></tr>
+          <tr><td>git worktree add &lt;path&gt;</td><td>Check out a branch in a separate directory</td></tr>
+          <tr><td>git shortlog -sn</td><td>Summarise commits per author</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-box note">
+      <span class="ib-icon">📝</span>
+      <p><strong>.gitignore</strong> — List files/directories Git should ignore. Use <code>*.log</code>, <code>node_modules/</code>, <code>.env</code>. Committed to the repo. Global ignore: <code>git config --global core.excludesfile ~/.gitignore_global</code></p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — GITHUB
+══════════════════════════════════════════ -->
+<section class="section" id="github">
+  <div class="section-header">
+    <div class="section-icon icon-gh">🐙</div>
+    <div>
+      <h2>GitHub</h2>
+      <p>Web-based hosting for Git repositories — owned by Microsoft since 2018</p>
+    </div>
+  </div>
+
+  <!-- Overview -->
+  <div class="sub">
+    <h3>Platform Overview</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Repositories <span class="badge badge-dark">Core</span></div>
+        <p>Public or private storage for your code with full Git history, issues, wikis, and project boards.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Pull Requests</div>
+        <p>The primary collaboration mechanism — propose, review, discuss, and merge changes with inline comments and review assignments.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">GitHub Actions</div>
+        <p>Built-in CI/CD automation. Define workflows in YAML to build, test, and deploy on every push or PR.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">GitHub Pages</div>
+        <p>Free static site hosting directly from a repository. Supports Jekyll themes and custom domains.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">GitHub Copilot</div>
+        <p>AI pair programmer powered by OpenAI Codex. Suggests code completions in real-time inside your editor.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">GitHub Packages</div>
+        <p>Host and manage packages (npm, Docker, Maven, NuGet, RubyGems) alongside your source code.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pull Requests -->
+  <div class="sub">
+    <h3>Pull Request Lifecycle</h3>
+    <div class="flow">
+      <div class="flow-step">Fork / Branch</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Commit Changes</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Open PR</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Code Review</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">CI Checks</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Merge</div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Merge Option</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Merge commit</td><td>Preserves all commits and creates a merge commit</td></tr>
+          <tr><td>Squash and merge</td><td>Combines all PR commits into one on the base branch</td></tr>
+          <tr><td>Rebase and merge</td><td>Replays PR commits on top of base, no merge commit</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- GitHub Actions -->
+  <div class="sub">
+    <h3>GitHub Actions</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Workflow</div>
+        <p>Automated process defined in a <code>.yml</code> file inside <code>.github/workflows/</code>. Triggered by events.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Jobs</div>
+        <p>A workflow contains one or more jobs. Jobs run in parallel by default, or sequentially with <code>needs:</code>.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Steps</div>
+        <p>Individual tasks in a job. Steps can run shell commands or use marketplace Actions.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Runners</div>
+        <p>Virtual machines that execute jobs. GitHub-hosted (Ubuntu, macOS, Windows) or self-hosted.</p>
+      </div>
+    </div>
+    <div class="code-block">
+<span class="comment"># .github/workflows/ci.yml — example CI workflow</span>
+name: CI Pipeline
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: <span class="string">'20'</span>
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+    </div>
+  </div>
+
+  <!-- Issues & Projects -->
+  <div class="sub">
+    <h3>Issues, Projects & Discussions</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Feature</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>Issues</td><td>Track bugs, feature requests, tasks. Support labels, milestones, assignees.</td></tr>
+          <tr><td>Projects (v2)</td><td>Kanban/table/roadmap board linked to issues and PRs. Supports custom fields.</td></tr>
+          <tr><td>Milestones</td><td>Group issues and PRs for a sprint or release goal with a due date.</td></tr>
+          <tr><td>Discussions</td><td>Community forum-style Q&A and announcements inside a repository.</td></tr>
+          <tr><td>Labels</td><td>Categorise issues/PRs. Default labels: bug, enhancement, help wanted, etc.</td></tr>
+          <tr><td>Linked Issues</td><td>Use keywords in PR description: <code>Fixes #42</code> auto-closes issue on merge.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Security -->
+  <div class="sub">
+    <h3>Security Features</h3>
+    <ul class="styled-list">
+      <li><strong>Dependabot</strong> — automatic pull requests to update vulnerable dependencies.</li>
+      <li><strong>Secret scanning</strong> — detects accidentally committed API keys and tokens.</li>
+      <li><strong>Code scanning (CodeQL)</strong> — static analysis to find security vulnerabilities in code.</li>
+      <li><strong>Branch protection rules</strong> — require reviews, passing CI, and up-to-date branches before merging.</li>
+      <li><strong>CODEOWNERS</strong> — file that auto-assigns reviewers based on which files are changed.</li>
+      <li><strong>Two-factor authentication (2FA)</strong> — required for contributors on certain plans/orgs.</li>
+    </ul>
+  </div>
+
+  <!-- GitHub CLI -->
+  <div class="sub">
+    <h3>GitHub CLI (gh)</h3>
+    <div class="code-block">
+<span class="comment"># Install: https://cli.github.com</span>
+<span class="cmd">gh auth login</span>                          <span class="comment"># Authenticate</span>
+<span class="cmd">gh repo create</span> my-project <span class="flag">--public</span>   <span class="comment"># Create a repository</span>
+<span class="cmd">gh pr create</span>                            <span class="comment"># Open a pull request interactively</span>
+<span class="cmd">gh pr list</span>                              <span class="comment"># List open PRs</span>
+<span class="cmd">gh pr checkout</span> <span class="num">42</span>                      <span class="comment"># Check out PR #42 locally</span>
+<span class="cmd">gh issue create</span> <span class="flag">--title</span> <span class="string">"Bug fix"</span>     <span class="comment"># Create an issue</span>
+<span class="cmd">gh workflow run</span> ci.yml                  <span class="comment"># Trigger a workflow manually</span>
+<span class="cmd">gh release create</span> v1.0.0               <span class="comment"># Create a release</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 3 — GITLAB
+══════════════════════════════════════════ -->
+<section class="section" id="gitlab">
+  <div class="section-header">
+    <div class="section-icon icon-gl">🦊</div>
+    <div>
+      <h2>GitLab</h2>
+      <p>Complete DevSecOps platform — available as cloud SaaS and self-hosted</p>
+    </div>
+  </div>
+
+  <!-- Overview -->
+  <div class="sub">
+    <h3>Platform Overview</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">GitLab CI/CD <span class="badge badge-orange">Built-in</span></div>
+        <p>First-class CI/CD with <code>.gitlab-ci.yml</code>. Pipelines, stages, jobs, and environments all defined as code.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Merge Requests</div>
+        <p>GitLab's equivalent of Pull Requests — with draft MRs, approval rules, merge trains, and squash options.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">GitLab Registry</div>
+        <p>Built-in Docker container registry and package registry for npm, Maven, PyPI, etc.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">GitLab Pages</div>
+        <p>Deploy static websites from CI/CD pipelines with custom domains and Let's Encrypt certificates.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Security & Compliance</div>
+        <p>SAST, DAST, dependency scanning, container scanning, license compliance — all integrated in the pipeline.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Self-Hosted Option</div>
+        <p>Run GitLab on your own servers (Community Edition free, Enterprise Edition paid). Full control over data.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CI/CD Pipeline -->
+  <div class="sub">
+    <h3>GitLab CI/CD Pipeline</h3>
+    <div class="info-box note">
+      <span class="ib-icon">✅</span>
+      <p>GitLab CI/CD is configured via a single <strong>.gitlab-ci.yml</strong> file in the root of the repository. GitLab automatically detects it on every push.</p>
+    </div>
+    <div class="code-block">
+<span class="comment"># .gitlab-ci.yml — example pipeline</span>
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  NODE_ENV: production
+
+build-job:
+  stage: build
+  image: node:<span class="num">20</span>
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths: [ dist/ ]
+
+test-job:
+  stage: test
+  image: node:<span class="num">20</span>
+  script:
+    - npm test
+  coverage: <span class="string">'/Coverage: \d+\.\d+/'</span>
+
+deploy-prod:
+  stage: deploy
+  script:
+    - echo <span class="string">"Deploying to production…"</span>
+  environment:
+    name: production
+    url: https://myapp.example.com
+  only:
+    - main
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Concept</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Stages</td><td>Sequential groups. All jobs in a stage run in parallel before moving to next stage.</td></tr>
+          <tr><td>Jobs</td><td>Individual units of work. Each runs in a clean runner environment.</td></tr>
+          <tr><td>Runners</td><td>Agents that execute jobs. Shared (GitLab.com), group-level, or project-specific.</td></tr>
+          <tr><td>Artifacts</td><td>Files produced by a job, passed to subsequent stages or downloadable.</td></tr>
+          <tr><td>Cache</td><td>Speed up pipelines by caching <code>node_modules</code>, <code>.pip</code> etc. between runs.</td></tr>
+          <tr><td>Environments</td><td>Track deployments to named envs (staging, production) with rollback support.</td></tr>
+          <tr><td>include:</td><td>Reuse CI/CD configuration from other YAML files or templates.</td></tr>
+          <tr><td>rules: / only:</td><td>Conditionally control when a job runs (branch, tag, MR, schedule…).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Merge Requests -->
+  <div class="sub">
+    <h3>Merge Requests (MR)</h3>
+    <ul class="styled-list">
+      <li><strong>Draft MR</strong> — prefix title with <code>Draft:</code> to signal work in progress; blocks accidental merges.</li>
+      <li><strong>Approval rules</strong> — require 1+ approvals from specific users or groups before merge.</li>
+      <li><strong>Merge trains</strong> — queue MRs to be merged one-by-one maintaining CI green state.</li>
+      <li><strong>Auto-merge</strong> — automatically merges when all conditions (CI, approvals) are satisfied.</li>
+      <li><strong>Related issues</strong> — use <code>Closes #123</code> in description to auto-close issues on merge.</li>
+      <li><strong>Reviewers</strong> — assign dedicated reviewers separate from code owners.</li>
+    </ul>
+  </div>
+
+  <!-- Groups & Namespaces -->
+  <div class="sub">
+    <h3>Groups, Subgroups & Namespaces</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Groups</div>
+        <p>Organise related projects together. Manage members, CI/CD variables, and runners at the group level.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Subgroups</div>
+        <p>Nest groups up to 20 levels deep. Inherit members and settings from parent groups.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Roles</div>
+        <p>Guest, Reporter, Developer, Maintainer, Owner — each with progressively more permissions.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Security -->
+  <div class="sub">
+    <h3>DevSecOps Features</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Feature</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>SAST</td><td>Static Application Security Testing — scans source code for vulnerabilities</td></tr>
+          <tr><td>DAST</td><td>Dynamic Application Security Testing — tests running application for security issues</td></tr>
+          <tr><td>Dependency Scanning</td><td>Identifies vulnerable packages in your dependencies</td></tr>
+          <tr><td>Container Scanning</td><td>Scans Docker images for known OS vulnerabilities</td></tr>
+          <tr><td>Secret Detection</td><td>Finds accidentally committed credentials and tokens</td></tr>
+          <tr><td>License Compliance</td><td>Checks open-source licenses against your approved list</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 4 — WORKFLOWS
+══════════════════════════════════════════ -->
+<section class="section" id="workflows">
+  <div class="section-header">
+    <div class="section-icon icon-git">🔀</div>
+    <div>
+      <h2>Git Workflows</h2>
+      <p>Industry-standard branching strategies for teams</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>Git Flow</h3>
+    <div class="info-box tip">
+      <span class="ib-icon">💡</span>
+      <p>Best for projects with scheduled releases. More complex but very structured.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><div class="card-title">main</div><p>Production-ready code. Only receives merges from hotfix and release branches. Tagged with version numbers.</p></div>
+      <div class="card"><div class="card-title">develop</div><p>Integration branch. All feature branches merge here. Represents latest delivered development changes.</p></div>
+      <div class="card"><div class="card-title">feature/*</div><p>Branched off develop. One branch per feature. Merged back to develop when complete.</p></div>
+      <div class="card"><div class="card-title">release/*</div><p>Branched off develop for release preparation. Only bug fixes, merges to both main and develop.</p></div>
+      <div class="card"><div class="card-title">hotfix/*</div><p>Emergency patches branched from main. Merged back to both main and develop immediately.</p></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>GitHub Flow</h3>
+    <div class="info-box note">
+      <span class="ib-icon">✅</span>
+      <p>Simple and effective for continuous deployment. Used by GitHub themselves. main is always deployable.</p>
+    </div>
+    <div class="flow">
+      <div class="flow-step">branch from main</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">commit changes</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">open PR</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">discuss &amp; review</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">deploy &amp; test</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">merge to main</div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>Trunk-Based Development</h3>
+    <ul class="styled-list">
+      <li>All developers commit directly to <code>main</code> (trunk) or use very short-lived feature branches (max 1–2 days).</li>
+      <li>Feature flags used to hide incomplete features in production.</li>
+      <li>Requires a strong CI/CD pipeline and high test coverage.</li>
+      <li>Enables true continuous integration — no long-lived branches means no merge hell.</li>
+      <li>Used by Google, Facebook, and many high-performing engineering teams.</li>
+    </ul>
+  </div>
+
+  <div class="sub">
+    <h3>Forking Workflow</h3>
+    <ul class="styled-list">
+      <li>Each contributor forks the official "upstream" repository to their own account.</li>
+      <li>Changes are pushed to the personal fork, then a PR is opened to the upstream.</li>
+      <li>Maintainers never give write access to contributors — ideal for open-source projects.</li>
+      <li>Upstream changes are synced: <code>git remote add upstream &lt;url&gt;</code> → <code>git fetch upstream</code> → <code>git merge upstream/main</code></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 5 — COMPARISON
+══════════════════════════════════════════ -->
+<section class="section" id="compare">
+  <div class="section-header">
+    <div class="section-icon icon-git">⚖️</div>
+    <div>
+      <h2>Git vs GitHub vs GitLab</h2>
+      <p>Understanding what each tool is and how they differ</p>
+    </div>
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-col">
+      <div class="compare-head ch-git">🌿 Git</div>
+      <ul class="compare-body">
+        <li>Command-line VCS tool</li>
+        <li>Runs 100% locally</li>
+        <li>No account needed</li>
+        <li>Free &amp; open source</li>
+        <li>Core of everything</li>
+        <li>No web UI</li>
+        <li>Cross-platform</li>
+      </ul>
+    </div>
+    <div class="compare-col">
+      <div class="compare-head ch-gh">🐙 GitHub</div>
+      <ul class="compare-body">
+        <li>Cloud-hosted Git repos</li>
+        <li>Largest dev community</li>
+        <li>Pull Requests</li>
+        <li>GitHub Actions CI/CD</li>
+        <li>Copilot AI features</li>
+        <li>GitHub Pages hosting</li>
+        <li>Microsoft-owned</li>
+      </ul>
+    </div>
+    <div class="compare-col">
+      <div class="compare-head ch-gl">🦊 GitLab</div>
+      <ul class="compare-body">
+        <li>Cloud + self-hosted</li>
+        <li>Full DevSecOps suite</li>
+        <li>Merge Requests</li>
+        <li>Best-in-class CI/CD</li>
+        <li>Built-in container reg.</li>
+        <li>SAST/DAST scanning</li>
+        <li>Independent company</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub" style="margin-top:32px">
+    <h3>Quick Reference: Terms</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Concept</th><th>GitHub Term</th><th>GitLab Term</th></tr></thead>
+        <tbody>
+          <tr><td>Propose code changes</td><td>Pull Request (PR)</td><td>Merge Request (MR)</td></tr>
+          <tr><td>CI/CD config file</td><td>.github/workflows/*.yml</td><td>.gitlab-ci.yml</td></tr>
+          <tr><td>Copy of repo</td><td>Fork</td><td>Fork</td></tr>
+          <tr><td>Auto-deployment</td><td>GitHub Actions + Pages</td><td>Environments + Pipelines</td></tr>
+          <tr><td>Package registry</td><td>GitHub Packages</td><td>GitLab Package Registry</td></tr>
+          <tr><td>Issue board</td><td>Projects</td><td>Issue Boards</td></tr>
+          <tr><td>Static site hosting</td><td>GitHub Pages</td><td>GitLab Pages</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>When to Choose</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Choose GitHub if…</div>
+        <p>You want the largest developer community, best open-source collaboration, GitHub Copilot integration, and Microsoft ecosystem tools.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Choose GitLab if…</div>
+        <p>You need self-hosting, a single platform for the full DevSecOps lifecycle, enterprise compliance, or advanced CI/CD without third-party tools.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Both platforms…</div>
+        <p>Use Git underneath. You can push the same repository to GitHub and GitLab simultaneously using multiple remotes.</p>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</main>
+
+<footer>
+  <p>Notes prepared by <strong>Sameeksha</strong> &nbsp;·&nbsp; Git · GitHub · GitLab Complete Reference &nbsp;·&nbsp; 2025</p>
+  <p style="margin-top:8px; font-size:.78rem; opacity:.6;">For personal study use. Content based on official Git, GitHub, and GitLab documentation.</p>
+</footer>
+
+</body>
+</html>
